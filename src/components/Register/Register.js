@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { registerNewUser } from "../../services/userService";
 import "./Register.scss";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -64,16 +65,18 @@ const Register = (props) => {
     return true;
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     let check = isValidInputs();
 
     if (check === true) {
-      axios.post("http://localhost:8386/api/v1/register", {
-        email,
-        phone,
-        username,
-        password,
-      });
+      let response = await registerNewUser(email, phone, username, password);
+      let serverData = response.data;
+      if (+serverData.EC === 0) {
+        toast.success(serverData.EM);
+        history.push("/login");
+      } else {
+        toast.error(serverData.EM);
+      }
     }
   };
 
@@ -155,7 +158,7 @@ const Register = (props) => {
             <div className="form-group">
               <label>Re-enter Password:</label>
               <input
-                type="text"
+                type="password"
                 className={
                   objCheckInput.isValidConfirmPassword
                     ? "form-control"

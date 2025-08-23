@@ -11,6 +11,12 @@ const Login = (props) => {
     history.push("/register");
   };
 
+  const handlePressEnter = (event) => {
+    if (event.charCode === 13 && event.code === "Enter") {
+      handleLogin();
+    }
+  };
+
   const [valueLogin, setValueLogin] = useState("");
   const [password, setPassword] = useState("");
 
@@ -42,6 +48,7 @@ const Login = (props) => {
       };
       sessionStorage.setItem("account", JSON.stringify(data));
       history.push("/users");
+      window.location.reload(); //trick ban
     }
     if (response && response.data && +response.data.EC !== 0) {
       toast.error(response.data.EM);
@@ -83,6 +90,9 @@ const Login = (props) => {
               value={password}
               onChange={(event) => {
                 setPassword(event.target.value);
+              }}
+              onKeyUp={(event) => {
+                handlePressEnter(event);
               }}
             />
             <button

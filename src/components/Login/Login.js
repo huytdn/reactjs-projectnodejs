@@ -1,5 +1,5 @@
 import "./Login.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { toast } from "react-toastify";
 import { loginUser } from "../../services/userService";
@@ -24,7 +24,7 @@ const Login = (props) => {
     isValidValueLogin: true,
     isValidPassword: true,
   };
-  const [objValueInput, setObjValueInput] = useState("");
+  const [objValueInput, setObjValueInput] = useState(defaultObjValueInput);
 
   const handleLogin = async () => {
     if (!valueLogin) {
@@ -54,6 +54,14 @@ const Login = (props) => {
       toast.error(response.data.EM);
     }
   };
+
+  useEffect(() => {
+    let session = sessionStorage.getItem("account");
+    if (session) {
+      history.push("/");
+      window.location.reload();
+    }
+  }, []);
   return (
     <div className="login-container ">
       <div className="container">
